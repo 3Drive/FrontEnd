@@ -13,6 +13,7 @@ import { angles } from "@/lib/angles";
 import CameraControls from "@/ui/Components/3d-components/camera/camera-controls";
 import { useShowNavContext } from "@/ui/Components/context/nav-context";
 import { useLoading } from "@/ui/Components/context/loading-context";
+import { useModal } from "@/ui/Modal/modal.hook";
 
 export default function MainPage3D() {
   const {
@@ -26,6 +27,11 @@ export default function MainPage3D() {
 
   const { showNav, viewState } = useShowNavContext();
   const { isLoading } = useLoading();
+  const { openModal } = useModal("GuideModal");
+
+  useEffect(() => {
+    openModal({ isFirst: true });
+  }, [openModal]);
 
   useEffect(() => {
     const handleClick = () => {
