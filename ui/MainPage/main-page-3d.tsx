@@ -13,6 +13,7 @@ import { angles } from "@/lib/angles";
 import CameraControls from "@/ui/Components/3d-components/camera/camera-controls";
 import { useShowNavContext } from "@/ui/Components/context/nav-context";
 import { useLoading } from "@/ui/Components/context/loading-context";
+import SettingHelpNav from "@/ui/Components/setting-help-nav";
 import { useModal } from "@/ui/Modal/modal.hook";
 
 export default function MainPage3D() {
@@ -60,9 +61,11 @@ export default function MainPage3D() {
                 position: [-13, 0, 0],
                 fov: 60,
               }}
+              onCreated={({ camera }) => camera.layers.enable(1)}
             >
-              <ambientLight intensity={2.0} />
-              <directionalLight position={[-10, 3, 0]} intensity={10} />
+              <ambientLight intensity={10.0} />
+              <directionalLight position={[-11, 0, 0]} intensity={5} />
+              <directionalLight position={[-11, -2, 0]} intensity={5} />
 
               <Finder />
               <CameraControls
@@ -90,6 +93,7 @@ export default function MainPage3D() {
       </div>
       {showNav && <SideNav />}
       <SearchBar />
+      <SettingHelpNav />
     </div>
   );
 }

@@ -24,9 +24,10 @@ import { toast } from "react-hot-toast";
 const Finder = () => {
   const { data: session } = useSession();
   const groupRef = useRef<THREE.Group>(null);
+  const innerGroupRef = useRef<THREE.Group>(null);
   const raycaster = useRef(new Raycaster());
   const { camera, mouse, scene } = useThree();
-  const { showSearch } = useShortCutContext();
+  const { showSearch, showPreSearch } = useShortCutContext();
   const { isTrash } = useShowNavContext();
   const {
     fileDragging,
@@ -35,6 +36,7 @@ const Finder = () => {
     setFileDragging,
     setDraggingNodeId,
     moveNodeToFolder,
+    matchedNodes,
   } = useFileTree();
   const { getFolderRefs } = useFolderRefContext();
   const { openModal, isOpen } = useModal("UploadModal");
@@ -59,6 +61,16 @@ const Finder = () => {
     else if (distance < 6.3) depth = 10;
     else depth = 11;
     setVisibleDepth(depth);
+
+    // Rotate groupRef around the pivot point when showSearch is true
+    if (showPreSearch && innerGroupRef.current) {
+      const group = innerGroupRef.current;
+      const pivot = new THREE.Vector3(-10, 1, 0);
+
+      group.position.sub(pivot);
+      group.rotateY(0.001);
+      group.position.add(pivot);
+    }
   });
 
   useEffect(() => {
@@ -106,7 +118,8 @@ const Finder = () => {
                   );
 
                   if (!res.ok) {
-                    throw new Error("파일 이동 실패");
+                    toast.error("파일 이동 실패");
+                    return;
                   }
 
                   moveNodeToFolder(draggingNodeId, folder.id);
@@ -195,10 +208,10 @@ const Finder = () => {
 
   return (
     <>
-      <group ref={groupRef}>
+      <group ref={groupRef} visible={!showSearch}>
         <group
           position={[-10, 0, 0]}
-          visible={!showSearch}
+          ref={innerGroupRef}
           // rotation={[0, Math.PI * 0.64, 0]}
         >
           {[...nodePositionMap.values()].map((node: PositionedNode) => {
@@ -218,6 +231,7 @@ const Finder = () => {
                   title={node.name}
                   showSearch={showSearch}
                   parentId={node.parentId}
+                  matched={matchedNodes.includes(node.id)}
                 />
 
                 {node.parentPosition && (
@@ -235,7 +249,17 @@ const Finder = () => {
 
       {isTrash && <TrashCan />}
 
-      {showSearch && <SearchGroup />}
+      {showSearch && (
+        <>
+          <pointLight
+            position={[-3, 0, 0]}
+            intensity={5}
+            distance={30}
+            decay={2}
+          />
+          <SearchGroup />
+        </>
+      )}
     </>
   );
 };
