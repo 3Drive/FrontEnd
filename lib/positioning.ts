@@ -62,7 +62,7 @@ export function assignPositions(
 
       // compute even angle spacing on ring
       const angle = (childIndex / siblingCount) * 2 * Math.PI;
-      const r = siblingCount > 20 ? 0.8 : 0.4;
+      const r = siblingCount > 20 ? 1.3 : 0.4;
       const up = new THREE.Vector3(0, 1, 0);
       if (Math.abs(dir.dot(up)) > 0.9) up.set(1, 0, 0);
       const tangent1 = new THREE.Vector3().crossVectors(dir, up).normalize();
