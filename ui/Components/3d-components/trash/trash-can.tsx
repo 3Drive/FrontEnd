@@ -16,7 +16,7 @@ export default function TrashCan() {
     { id: number; type: string; title: string } | undefined
   >(undefined);
   const targetRotation = useRef(0);
-  const trashCan3D = useGLTF("/models/recycle_bin.glb");
+  const trashCan3D = useGLTF("/models/trashcan_paper.glb");
   const pdf = useGLTF("/models/pdf_3d.glb");
   const excel = useGLTF("/models/excel_3d.glb");
   const image = useGLTF("/models/image_3d.glb");
